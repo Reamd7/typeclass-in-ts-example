@@ -1,5 +1,6 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
+import { ApplyTrait } from './apply.trait';
 import { MappableTrait } from './mappable.trait';
 
 // for 运行时使用
@@ -34,3 +35,18 @@ declare module './mappable.trait' {
   }
 }
 MappableTrait.TaskFunctor = new TaskFunctorMappable();
+
+// =========== Ap Functor ===========
+class TaskApply implements ApplyTrait<'TaskFunctor'> {
+  ap<A, B>(f: $<'TaskFunctor', (a: A) => B>, fa: $<'TaskFunctor', A>): $<'TaskFunctor', B> {
+    return TaskFunctor.of(
+      () => Promise.all([f.unsafePerformIO(), fa.unsafePerformIO()]).then(([f, a]) => f(a))
+    )
+  }
+}
+declare module './apply.trait' {
+  namespace ApplyTrait {
+    export let TaskFunctor: TaskApply;
+  }
+}
+ApplyTrait.TaskFunctor = new TaskApply();

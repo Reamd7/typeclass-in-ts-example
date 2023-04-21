@@ -1,6 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { MappableTrait } from './mappable.trait';
+import { ApplyTrait } from './apply.trait';
+import { MappableTrait, map } from './mappable.trait';
 
 // for 运行时使用
 @datatype('IOFunctor')
@@ -34,3 +35,16 @@ declare module './mappable.trait' {
   }
 }
 MappableTrait.IOFunctor = new IOFunctorMappable();
+
+// =========== Ap Functor ===========
+class IOApply implements ApplyTrait<'IOFunctor'> {
+  ap<A, B>(f: $<'IOFunctor', (a: A) => B>, fa: $<'IOFunctor', A>): $<'IOFunctor', B> {
+    return map(f.unsafePerformIO(), fa)
+  }
+}
+declare module './apply.trait' {
+  namespace ApplyTrait {
+    export let IOFunctor: IOApply;
+  }
+}
+ApplyTrait.IOFunctor = new IOApply();

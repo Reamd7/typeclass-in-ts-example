@@ -1,6 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { MappableTrait } from './mappable.trait';
+import { ApplyTrait } from './apply.trait';
+import { MappableTrait, map } from './mappable.trait';
 
 // for 运行时使用
 @datatype('ResultFunctor')
@@ -33,3 +34,17 @@ declare module './mappable.trait' {
   }
 }
 MappableTrait.ResultFunctor = new ResultFunctorMappable();
+
+// =========== Ap Functor ===========
+class ResultApply implements ApplyTrait<'ResultFunctor'> {
+  ap<A, B>(f: $<'ResultFunctor', (a: A) => B>, fa: $<'ResultFunctor', A>): $<'ResultFunctor', B> {
+    if (f.value instanceof Error) return f as $<'ResultFunctor', B>
+    return map(f.value, fa)
+  }
+}
+declare module './apply.trait' {
+  namespace ApplyTrait {
+    export let ResultFunctor: ResultApply;
+  }
+}
+ApplyTrait.ResultFunctor = new ResultApply();

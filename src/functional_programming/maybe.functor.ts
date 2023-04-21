@@ -1,6 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { MappableTrait } from './mappable.trait';
+import { MappableTrait, map } from './mappable.trait';
+import { ApplyTrait } from './apply.trait';
 
 // for 运行时使用
 @datatype('MayBeFunctor')
@@ -33,3 +34,17 @@ declare module './mappable.trait' {
   }
 }
 MappableTrait.MayBeFunctor = new MayBeFunctorMappable();
+
+// =========== Ap Functor ===========
+class MayBeApply implements ApplyTrait<'MayBeFunctor'> {
+  ap<A, B>(f: $<'MayBeFunctor', (a: A) => B>, fa: $<'MayBeFunctor', A>): $<'MayBeFunctor', B> {
+    if (!f.value) return MayBeFunctor.of<B>(null)
+    return map(f.value, fa)
+  }
+}
+declare module './apply.trait' {
+  namespace ApplyTrait {
+    export let MayBeFunctor: MayBeApply;
+  }
+}
+ApplyTrait.MayBeFunctor = new MayBeApply();

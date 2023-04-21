@@ -1,6 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
 import { MappableTrait } from './mappable.trait';
+import { ApplyTrait } from './apply.trait';
 
 // for 运行时使用
 @datatype('Identity')
@@ -32,3 +33,16 @@ declare module './mappable.trait' {
   }
 }
 MappableTrait.Identity = new IdentityMappable();
+
+// =========== Ap Functor ===========
+class IdentityApply implements ApplyTrait<'Identity'> {
+  ap<A, B>(f: $<'Identity', (a: A) => B>, fa: $<'Identity', A>): $<'Identity', B> {
+    return Identity.of(f.value(fa.value))
+  }
+}
+declare module './apply.trait' {
+  namespace ApplyTrait {
+    export let Identity: IdentityApply;
+  }
+}
+ApplyTrait.Identity = new IdentityApply();
