@@ -19,6 +19,7 @@ export function ap<F extends ApFunctorInstances, A = any, B = any>(
   return (<any>ApplyTrait[kind(fa) as F]).ap(f, fa) as $<F, B>;
 }
 
+// ap(ap(a, b), c) => lift 的工具函数
 export function lift<F extends ApFunctorInstances, B, C>(
   g: $<F, (a: B) => C>, fb: $<F, B>
 ) {
@@ -33,4 +34,9 @@ export function liftA3<F extends ApFunctorInstances, B, C, D, E>(
   g: $<F, (a: B) => (b: C) => (c: D) => E>, fb: $<F, B>, fc: $<F, C>, fd: $<F, D>
 ) {
   return ap(ap(ap(g, fb), fc), fd)
+};
+export function liftA4<F extends ApFunctorInstances, B, C, D, E, G>(
+  g: $<F, (a: B) => (b: C) => (c: D) => (e: E) => G>, fb: $<F, B>, fc: $<F, C>, fd: $<F, D>, fg: $<F, E>
+) {
+  return ap(ap(ap(ap(g, fb), fc), fd), fg)
 };
