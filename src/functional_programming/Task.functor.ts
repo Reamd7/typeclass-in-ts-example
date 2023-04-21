@@ -1,7 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { ApplyTrait } from './apply.trait';
-import { MappableTrait } from './mappable.trait';
+import { ApplyTrait } from './trait/apply.trait';
+import { MappableTrait } from './trait/mappable.trait';
 
 // for 运行时使用
 @datatype('TaskFunctor')
@@ -29,7 +29,7 @@ class TaskFunctorMappable implements MappableTrait<'TaskFunctor'> {
     );
   }
 }
-declare module './mappable.trait' {
+declare module './trait/mappable.trait' {
   namespace MappableTrait {
     export let TaskFunctor: TaskFunctorMappable;
   }
@@ -44,7 +44,7 @@ class TaskApply implements ApplyTrait<'TaskFunctor'> {
     )
   }
 }
-declare module './apply.trait' {
+declare module './trait/apply.trait' {
   namespace ApplyTrait {
     export let TaskFunctor: TaskApply;
   }

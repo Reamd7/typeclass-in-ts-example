@@ -1,7 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { MappableTrait } from './mappable.trait';
-import { ApplyTrait } from './apply.trait';
+import { MappableTrait } from './trait/mappable.trait';
+import { ApplyTrait } from './trait/apply.trait';
 
 // for 运行时使用
 @datatype('Identity')
@@ -27,7 +27,7 @@ class IdentityMappable implements MappableTrait<'Identity'> {
     return Identity.of<B>(f(fa.value));
   }
 }
-declare module './mappable.trait' {
+declare module './trait/mappable.trait' {
   namespace MappableTrait {
     export let Identity: IdentityMappable;
   }
@@ -40,7 +40,7 @@ class IdentityApply implements ApplyTrait<'Identity'> {
     return Identity.of(f.value(fa.value))
   }
 }
-declare module './apply.trait' {
+declare module './trait/apply.trait' {
   namespace ApplyTrait {
     export let Identity: IdentityApply;
   }

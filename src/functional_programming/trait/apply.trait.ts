@@ -1,6 +1,6 @@
 // Monad Trait
 
-import { HKT, $, kind } from '../typeclasses/index';
+import { HKT, $, kind } from '../../typeclasses/index';
 
 export interface ApplyTrait<F extends HKT> {
   // unpack<A, B>(f: $<F, (a: A) => B>): (fc: $<F, A>) => $<F, B>;

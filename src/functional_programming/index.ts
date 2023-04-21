@@ -1,8 +1,8 @@
 import { Identity } from './id.functor';
 import { MayBeFunctor } from './maybe.functor';
 import { ResultFunctor } from './result.functor';
-import { mapCurry, map, mapCurry2 } from './mappable.trait';
-import { liftA2 } from './apply.trait';
+import { mapCurry, map, mapCurry2 } from './trait/mappable.trait';
+import { liftA2 } from './trait/apply.trait';
 
 const el = map((val) => val + 1, Identity.of(1));
 const el2 = mapCurry((val: number) => Identity.of(val + 1))(Identity.of(1));

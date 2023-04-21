@@ -1,7 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { ApplyTrait } from './apply.trait';
-import { MappableTrait, map } from './mappable.trait';
+import { ApplyTrait } from './trait/apply.trait';
+import { MappableTrait, map } from './trait/mappable.trait';
 
 // for 运行时使用
 @datatype('IOFunctor')
@@ -29,7 +29,7 @@ class IOFunctorMappable implements MappableTrait<'IOFunctor'> {
     );
   }
 }
-declare module './mappable.trait' {
+declare module './trait/mappable.trait' {
   namespace MappableTrait {
     export let IOFunctor: IOFunctorMappable;
   }
@@ -42,7 +42,7 @@ class IOApply implements ApplyTrait<'IOFunctor'> {
     return map(f.unsafePerformIO(), fa)
   }
 }
-declare module './apply.trait' {
+declare module './trait/apply.trait' {
   namespace ApplyTrait {
     export let IOFunctor: IOApply;
   }

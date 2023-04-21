@@ -1,7 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { MappableTrait, map } from './mappable.trait';
-import { ApplyTrait } from './apply.trait';
+import { MappableTrait, map } from './trait/mappable.trait';
+import { ApplyTrait } from './trait/apply.trait';
 
 // for 运行时使用
 @datatype('MayBeFunctor')
@@ -28,7 +28,7 @@ class MayBeFunctorMappable implements MappableTrait<'MayBeFunctor'> {
     return MayBeFunctor.of<B>(f(fa.value));
   }
 }
-declare module './mappable.trait' {
+declare module './trait/mappable.trait' {
   namespace MappableTrait {
     export let MayBeFunctor: MayBeFunctorMappable;
   }
@@ -42,7 +42,7 @@ class MayBeApply implements ApplyTrait<'MayBeFunctor'> {
     return map(f.value, fa)
   }
 }
-declare module './apply.trait' {
+declare module './trait/apply.trait' {
   namespace ApplyTrait {
     export let MayBeFunctor: MayBeApply;
   }

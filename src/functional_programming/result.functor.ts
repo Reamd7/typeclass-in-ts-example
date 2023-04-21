@@ -1,7 +1,7 @@
 import { datatype } from '../typeclasses/index';
 import { $, HKTSymbol } from '../typeclasses/index';
-import { ApplyTrait } from './apply.trait';
-import { MappableTrait, map } from './mappable.trait';
+import { ApplyTrait } from './trait/apply.trait';
+import { MappableTrait, map } from './trait/mappable.trait';
 
 // for 运行时使用
 @datatype('ResultFunctor')
@@ -28,7 +28,7 @@ class ResultFunctorMappable implements MappableTrait<'ResultFunctor'> {
     return ResultFunctor.of<B>(f(fa.value));
   }
 }
-declare module './mappable.trait' {
+declare module './trait/mappable.trait' {
   namespace MappableTrait {
     export let ResultFunctor: ResultFunctorMappable;
   }
@@ -42,7 +42,7 @@ class ResultApply implements ApplyTrait<'ResultFunctor'> {
     return map(f.value, fa)
   }
 }
-declare module './apply.trait' {
+declare module './trait/apply.trait' {
   namespace ApplyTrait {
     export let ResultFunctor: ResultApply;
   }
