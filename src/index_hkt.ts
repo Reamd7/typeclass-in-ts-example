@@ -1,13 +1,12 @@
-import { map } from "./functor_feature";
-import { XStream } from "./xstream_adt";
-import "./xstream_functor_feature";
-import { YStream } from "./ystream_adt";
-import "./ystream_functor_feature";
-import "./xstream_display_feature";
-import { display } from "./display_feature";
-
+import { map } from './functor.trait';
+import { XStream } from './xstream.adt';
+import './xstream.functor.impl';
+import { YStream } from './ystream.adt';
+import './ystream.functor.impl';
+import './xstream.display.impl';
+import { display } from './display.trait';
 console.log(
-  map<"XStream", number, number>(a=>a+1, new XStream(1)),
-  map<"YStream", number, number>(a=>a+1, new YStream(1)),
-  display<"XStream", number>(new XStream(1))
-)
+  map((a) => a + 1, XStream.of(1)),
+  map((a) => a + 1, YStream.of(1)),
+  display(XStream.of(1))
+);
