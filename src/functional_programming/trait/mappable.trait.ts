@@ -1,4 +1,4 @@
-import { HKT, $, kind } from '../typeclasses/index';
+import { HKT, $, kind } from '../../typeclasses/index';
 
 export interface MappableTrait<F extends HKT> {
   map<A, B>(f: (a: A) => B, fa: $<F, A>): $<F, B>;
