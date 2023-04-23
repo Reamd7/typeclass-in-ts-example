@@ -3,6 +3,19 @@ import { MayBeFunctor } from './maybe.functor';
 import { ResultFunctor } from './result.functor';
 import { mapCurry, map, mapCurry2 } from './trait/mappable.trait';
 import { liftA2 } from './trait/apply.trait';
+import fs from 'fs';
+import { IOFunctor } from './IO.functor';
+import { pipe } from './utils/pipe';
+import { flow } from './utils/flow';
+
+
+const readFile = (fileName: string) => IOFunctor.of(() => fs.readFileSync(fileName, 'utf8')); //
+const print = (fileContent: string) => IOFunctor.of(() => {
+    console.log(fileContent);
+    return fileContent
+});
+
+const cat = flow(readFile, mapCurry(print))
 
 const el = map((val) => val + 1, Identity.of(1));
 const el2 = mapCurry((val: number) => Identity.of(val + 1))(Identity.of(1));
@@ -34,3 +47,4 @@ console.log(
 );
 
 debugger;
+

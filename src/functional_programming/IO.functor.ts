@@ -22,7 +22,7 @@ declare module '@hkt' {
 }
 
 // =========== IOFunctor ===========
-class IOFunctorMappable implements MappableTrait<'IOFunctor'> {
+class IOFunctorMapper implements MappableTrait<'IOFunctor'> {
   map<A, B>(f: (a: A) => B, fa: $<'IOFunctor', A>): $<'IOFunctor', B> {
     return IOFunctor.of<B>(
       () => f(fa.unsafePerformIO())
@@ -31,20 +31,20 @@ class IOFunctorMappable implements MappableTrait<'IOFunctor'> {
 }
 declare module './trait/mappable.trait' {
   namespace MappableTrait {
-    export let IOFunctor: IOFunctorMappable;
+    export let IOFunctor: IOFunctorMapper;
   }
 }
-MappableTrait.IOFunctor = new IOFunctorMappable();
+MappableTrait.IOFunctor = new IOFunctorMapper();
 
 // =========== Ap Functor ===========
-class IOApply implements ApplyTrait<'IOFunctor'> {
+class IOFunctorApplier implements ApplyTrait<'IOFunctor'> {
   ap<A, B>(f: $<'IOFunctor', (a: A) => B>, fa: $<'IOFunctor', A>): $<'IOFunctor', B> {
     return map(f.unsafePerformIO(), fa)
   }
 }
 declare module './trait/apply.trait' {
   namespace ApplyTrait {
-    export let IOFunctor: IOApply;
+    export let IOFunctor: IOFunctorApplier;
   }
 }
-ApplyTrait.IOFunctor = new IOApply();
+ApplyTrait.IOFunctor = new IOFunctorApplier();
