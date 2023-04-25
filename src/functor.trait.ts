@@ -1,7 +1,7 @@
-import { HKT, $, kind } from "./typeclasses/index";
+import { HKTName, HKT, kind } from "./typeclasses/index";
 
-export interface Functor<F extends HKT> {
-  map<A, B>(f: (a: A) => B, fa: $<F, A>): $<F, B>;
+export interface Functor<F extends HKTName> {
+  map<A, B>(f: (a: A) => B, fa: HKT<F, A>): HKT<F, B>;
 }
 type FunctorInstances = keyof typeof Functor;
 
@@ -11,7 +11,7 @@ export module Functor {
 
 export function map<F extends FunctorInstances, A = any, B = any>(
   f: (v: A) => B,
-  fa: $<F, A>
-): $<F, B> {
-  return (<any>Functor[kind(fa) as F]).map(f, fa) as $<F, B>;
+  fa: HKT<F, A>
+): HKT<F, B> {
+  return (<any>Functor[kind(fa) as F]).map(f, fa) as HKT<F, B>;
 }

@@ -1,5 +1,5 @@
 import { datatype } from '../typeclasses/index';
-import { $, HKTSymbol } from '../typeclasses/index';
+import { HKT, HKTSymbol } from '../typeclasses/index';
 import { ApplyTrait } from './trait/apply.trait';
 import { MappableTrait, map } from './trait/mappable.trait';
 
@@ -10,7 +10,7 @@ export class ResultFunctor<T> {
   [HKTSymbol]!: 'ResultFunctor';
   private constructor(public readonly value: T | Error) {}
   // 将任意数据类型放入这个最小上下文, 并声明为高阶类型的具体子类型
-  static of<T>(value: T | Error): $<'ResultFunctor', T> {
+  static of<T>(value: T | Error): HKT<'ResultFunctor', T> {
     return new ResultFunctor<T>(value);
   }
 }
@@ -23,8 +23,8 @@ declare module '@hkt' {
 
 // =========== Result Mapper ===========
 class ResultFunctorMappable implements MappableTrait<'ResultFunctor'> {
-  map<A, B>(f: (a: A) => B, fa: $<'ResultFunctor', A>): $<'ResultFunctor', B> {
-    if (fa.value instanceof Error) return fa as $<'ResultFunctor', B>;
+  map<A, B>(f: (a: A) => B, fa: HKT<'ResultFunctor', A>): HKT<'ResultFunctor', B> {
+    if (fa.value instanceof Error) return fa as HKT<'ResultFunctor', B>;
     return ResultFunctor.of<B>(f(fa.value));
   }
 }
@@ -37,8 +37,8 @@ MappableTrait.ResultFunctor = new ResultFunctorMappable();
 
 // =========== Ap Functor ===========
 class ResultApply implements ApplyTrait<'ResultFunctor'> {
-  ap<A, B>(f: $<'ResultFunctor', (a: A) => B>, fa: $<'ResultFunctor', A>): $<'ResultFunctor', B> {
-    if (f.value instanceof Error) return f as $<'ResultFunctor', B>
+  ap<A, B>(f: HKT<'ResultFunctor', (a: A) => B>, fa: HKT<'ResultFunctor', A>): HKT<'ResultFunctor', B> {
+    if (f.value instanceof Error) return f as HKT<'ResultFunctor', B>
     return map(f.value, fa)
   }
 }

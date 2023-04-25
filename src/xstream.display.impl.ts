@@ -1,9 +1,9 @@
-import { $ } from './typeclasses/index';
+import { HKT } from './typeclasses/index';
 import { Display } from './display.trait';
 import { XStream } from './xstream.adt';
 
 class XStreamDisplay implements Display<'XStream'> {
-  print<A>(fa: $<'XStream', A>): string {
+  print<A>(fa: HKT<'XStream', A>): string {
     console.log('console display', fa.value);
     return String(fa.value);
   }

@@ -1,9 +1,9 @@
-import { $ } from './typeclasses/index';
+import { HKT } from './typeclasses/index';
 import { Functor } from './functor.trait';
 import { YStream } from './ystream.adt';
 
 class YStreamFunctor implements Functor<'YStream'> {
-  map<A, B>(f: (a: A) => B, fa: $<'YStream', A>): $<'YStream', B> {
+  map<A, B>(f: (a: A) => B, fa: HKT<'YStream', A>): HKT<'YStream', B> {
     return YStream.of(f(fa.value));
   }
 }

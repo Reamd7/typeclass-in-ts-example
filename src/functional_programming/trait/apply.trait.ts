@@ -1,10 +1,11 @@
 // Monad Trait
 
-import { HKT, $, kind } from '../../typeclasses/index';
+import { HKTName, HKT, kind } from '../../typeclasses/index';
 
-export interface ApplyTrait<F extends HKT> {
+// 实现一个Trait 必须注册在全局的 HKTName 中
+export interface ApplyTrait<F extends HKTName> {
   // unpack<A, B>(f: $<F, (a: A) => B>): (fc: $<F, A>) => $<F, B>;
-  ap<A, B>(f: $<F, (a: A) => B>, fa: $<F, A>): $<F, B>;
+  ap<A, B>(f: HKT<F, (a: A) => B>, fa: HKT<F, A>): HKT<F, B>;
 }
 type ApFunctorInstances = keyof typeof ApplyTrait;
 
@@ -13,30 +14,30 @@ export module ApplyTrait {
 }
 
 export function ap<F extends ApFunctorInstances, A = any, B = any>(
-  f: $<F, (a: A) => B>,
-  fa: $<F, A>
-): $<F, B> {
-  return (<any>ApplyTrait[kind(fa) as F]).ap(f, fa) as $<F, B>;
+  f: HKT<F, (a: A) => B>,
+  fa: HKT<F, A>
+): HKT<F, B> {
+  return (<any>ApplyTrait[kind(fa) as F]).ap(f, fa) as HKT<F, B>;
 }
 
 // ap(ap(a, b), c) => lift 的工具函数
 export function lift<F extends ApFunctorInstances, B, C>(
-  g: $<F, (a: B) => C>, fb: $<F, B>
+  g: HKT<F, (a: B) => C>, fb: HKT<F, B>
 ) {
   return ap(g, fb)
 };
 export function liftA2<F extends ApFunctorInstances, B, C, D>(
-  g: $<F, (a: B) => (b: C) => D>, fb: $<F, B>, fc: $<F, C>
+  g: HKT<F, (a: B) => (b: C) => D>, fb: HKT<F, B>, fc: HKT<F, C>
 ) {
   return ap(ap(g, fb), fc)
 };
 export function liftA3<F extends ApFunctorInstances, B, C, D, E>(
-  g: $<F, (a: B) => (b: C) => (c: D) => E>, fb: $<F, B>, fc: $<F, C>, fd: $<F, D>
+  g: HKT<F, (a: B) => (b: C) => (c: D) => E>, fb: HKT<F, B>, fc: HKT<F, C>, fd: HKT<F, D>
 ) {
   return ap(ap(ap(g, fb), fc), fd)
 };
 export function liftA4<F extends ApFunctorInstances, B, C, D, E, G>(
-  g: $<F, (a: B) => (b: C) => (c: D) => (e: E) => G>, fb: $<F, B>, fc: $<F, C>, fd: $<F, D>, fg: $<F, E>
+  g: HKT<F, (a: B) => (b: C) => (c: D) => (e: E) => G>, fb: HKT<F, B>, fc: HKT<F, C>, fd: HKT<F, D>, fg: HKT<F, E>
 ) {
   return ap(ap(ap(ap(g, fb), fc), fd), fg)
 };

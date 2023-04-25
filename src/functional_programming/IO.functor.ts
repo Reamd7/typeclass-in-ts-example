@@ -1,5 +1,5 @@
 import { datatype } from '../typeclasses/index';
-import { $, HKTSymbol } from '../typeclasses/index';
+import { HKT, HKTSymbol } from '../typeclasses/index';
 import { ApplyTrait } from './trait/apply.trait';
 import { MappableTrait, map } from './trait/mappable.trait';
 
@@ -10,7 +10,7 @@ export class IOFunctor<T> {
   [HKTSymbol]!: 'IOFunctor';
   private constructor(public readonly unsafePerformIO: () => T) {}
   // 将任意数据类型放入这个最小上下文, 并声明为高阶类型的具体子类型
-  static of<T>(value: () => T): $<'IOFunctor', T> {
+  static of<T>(value: () => T): HKT<'IOFunctor', T> {
     return new IOFunctor<T>(value);
   }
 }
@@ -23,7 +23,7 @@ declare module '@hkt' {
 
 // =========== IOFunctor ===========
 class IOFunctorMapper implements MappableTrait<'IOFunctor'> {
-  map<A, B>(f: (a: A) => B, fa: $<'IOFunctor', A>): $<'IOFunctor', B> {
+  map<A, B>(f: (a: A) => B, fa: HKT<'IOFunctor', A>): HKT<'IOFunctor', B> {
     return IOFunctor.of<B>(
       () => f(fa.unsafePerformIO())
     );
@@ -38,7 +38,7 @@ MappableTrait.IOFunctor = new IOFunctorMapper();
 
 // =========== Ap Functor ===========
 class IOFunctorApplier implements ApplyTrait<'IOFunctor'> {
-  ap<A, B>(f: $<'IOFunctor', (a: A) => B>, fa: $<'IOFunctor', A>): $<'IOFunctor', B> {
+  ap<A, B>(f: HKT<'IOFunctor', (a: A) => B>, fa: HKT<'IOFunctor', A>): HKT<'IOFunctor', B> {
     return map(f.unsafePerformIO(), fa)
   }
 }

@@ -1,5 +1,5 @@
 import { datatype } from '../typeclasses/index';
-import { $, HKTSymbol } from '../typeclasses/index';
+import { HKT, HKTSymbol } from '../typeclasses/index';
 import { MappableTrait } from './trait/mappable.trait';
 import { ApplyTrait } from './trait/apply.trait';
 
@@ -10,7 +10,7 @@ export class Identity<T> {
   [HKTSymbol]!: 'Identity';
   private constructor(public readonly value: T) {}
   // 将任意数据类型放入这个最小上下文, 并声明为高阶类型的具体子类型
-  static of<T>(value: T): $<'Identity', T> {
+  static of<T>(value: T): HKT<'Identity', T> {
     return new Identity<T>(value);
   }
 }
@@ -23,7 +23,7 @@ declare module '@hkt' {
 
 // =========== Functor ===========
 class IdentityMappable implements MappableTrait<'Identity'> {
-  map<A, B>(f: (a: A) => B, fa: $<'Identity', A>): $<'Identity', B> {
+  map<A, B>(f: (a: A) => B, fa: HKT<'Identity', A>): HKT<'Identity', B> {
     return Identity.of<B>(f(fa.value));
   }
 }
@@ -36,7 +36,7 @@ MappableTrait.Identity = new IdentityMappable();
 
 // =========== Ap Functor ===========
 class IdentityApply implements ApplyTrait<'Identity'> {
-  ap<A, B>(f: $<'Identity', (a: A) => B>, fa: $<'Identity', A>): $<'Identity', B> {
+  ap<A, B>(f: HKT<'Identity', (a: A) => B>, fa: HKT<'Identity', A>): HKT<'Identity', B> {
     return Identity.of(f.value(fa.value))
   }
 }

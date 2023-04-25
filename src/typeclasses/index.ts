@@ -3,10 +3,10 @@ export interface _<A> {
   // Array: Array<A>;
 }
 
-export type HKT = keyof _<any>;
+export type HKTName = keyof _<any>;
 
 export declare const HKTSymbol: unique symbol;
-export type $<F extends HKT, A> = _<A>[F] & {
+export type HKT<F extends HKTName, A> = _<A>[F] & {
   [HKTSymbol]: F;
 };
 
@@ -30,7 +30,7 @@ export function datatypeOf(target: any): string {
   }
 }
 
-export function kind<F extends HKT>(target: $<F, any>): F {
+export function kind<F extends HKTName>(target: HKT<F, any>): F {
   return datatypeOf(target) as F;
 }
 
@@ -42,40 +42,40 @@ function isPrimitive(a: any): boolean {
   return ['string', 'number', 'symbol', 'boolean'].indexOf(typeof a) >= 0;
 }
 // explain this interface 
-export interface Functor<F extends HKT> {
-  map<A, B>(f: (a: A) => B, fa: $<F, A>): $<F, B>;
+export interface Functor<F extends HKTName> {
+  map<A, B>(f: (a: A) => B, fa: HKT<F, A>): HKT<F, B>;
 }
 
-export interface Apply<F extends HKT> extends Functor<F> {
-  ap<A, B>(fab: $<F, (a: A) => B>, fa: $<F, A>): $<F, B>;
+export interface Apply<F extends HKTName> extends Functor<F> {
+  ap<A, B>(fab: HKT<F, (a: A) => B>, fa: HKT<F, A>): HKT<F, B>;
 }
 
-export interface Applicative<F extends HKT> extends Apply<F> {
-  of<A>(a: A): $<F, A>;
+export interface Applicative<F extends HKTName> extends Apply<F> {
+  of<A>(a: A): HKT<F, A>;
 }
 
-export interface Chain<F extends HKT> extends Apply<F> {
-  chain<A, B>(f: (a: A) => $<F, B>, fa: $<F, A>): $<F, B>;
+export interface Chain<F extends HKTName> extends Apply<F> {
+  chain<A, B>(f: (a: A) => HKT<F, B>, fa: HKT<F, A>): HKT<F, B>;
 }
 
-export interface Monad<F extends HKT> extends Applicative<F>, Chain<F> {}
+export interface Monad<F extends HKTName> extends Applicative<F>, Chain<F> {}
 
-export interface Alt<F extends HKT> extends Functor<F> {
-  alt<A>(fx: $<F, A>, fy: $<F, A>): $<F, A>;
+export interface Alt<F extends HKTName> extends Functor<F> {
+  alt<A>(fx: HKT<F, A>, fy: HKT<F, A>): HKT<F, A>;
 }
 
-export interface Plus<F extends HKT> extends Alt<F> {
-  zero<A>(): $<F, A>;
+export interface Plus<F extends HKTName> extends Alt<F> {
+  zero<A>(): HKT<F, A>;
 }
 
-export interface Alternative<F extends HKT> extends Applicative<F>, Plus<F> {}
+export interface Alternative<F extends HKTName> extends Applicative<F>, Plus<F> {}
 
-export interface Foldable<F extends HKT> {
-  reduce<A, B>(f: (b: B, a: A) => B, b: B, fa: $<F, A>): B;
+export interface Foldable<F extends HKTName> {
+  reduce<A, B>(f: (b: B, a: A) => B, b: B, fa: HKT<F, A>): B;
 }
 
-export interface Traversable<F extends HKT> extends Functor<F>, Foldable<F> {
-  traverse<G extends HKT>(
+export interface Traversable<F extends HKTName> extends Functor<F>, Foldable<F> {
+  traverse<G extends HKTName>(
     A: Applicative<G>
-  ): <A, B>(f: (a: A) => $<G, B>, ta: $<F, A>) => $<G, $<F, B>>;
+  ): <A, B>(f: (a: A) => HKT<G, B>, ta: HKT<F, A>) => HKT<G, HKT<F, B>>;
 }

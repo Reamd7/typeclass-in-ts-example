@@ -1,7 +1,7 @@
-import { HKT, $, kind } from '../../typeclasses/index';
+import { HKTName, HKT, kind } from '../../typeclasses/index';
 
-export interface MappableTrait<F extends HKT> {
-  map<A, B>(f: (a: A) => B, fa: $<F, A>): $<F, B>;
+export interface MappableTrait<F extends HKTName> {
+  map<A, B>(f: (a: A) => B, fa: HKT<F, A>): HKT<F, B>;
 }
 type FunctorInstances = keyof typeof MappableTrait;
 
@@ -11,19 +11,21 @@ export module MappableTrait {
 
 export function map<F extends FunctorInstances, A = any, B = any>(
   f: (v: A) => B,
-  fa: $<F, A>
-): $<F, B> {
-  return (<any>MappableTrait[kind(fa) as F]).map(f, fa) as $<F, B>;
+  fa: HKT<F, A>
+): HKT<F, B> {
+  return (<any>MappableTrait[kind(fa) as F]).map(f, fa) as HKT<F, B>;
 }
 
 export function mapCurry<A, B>(f: (v: A) => B) {
-  return function <F extends FunctorInstances>(fa: $<F, A>) {
-    return (<any>MappableTrait[kind(fa) as F]).map(f, fa) as $<F, B>;
+  return function <F extends FunctorInstances>(fa: HKT<F, A>) {
+    return (<any>MappableTrait[kind(fa) as F]).map(f, fa) as HKT<F, B>;
   };
 }
 
-export function mapCurry2<F extends FunctorInstances, A>(fa: $<F, A>) {
+export function mapCurry2<F extends FunctorInstances, A>(fa: HKT<F, A>) {
   return function <B>(f: (v: A) => B) {
-    return (<any>MappableTrait[kind(fa) as F]).map(f, fa) as $<F, B>;
+    return (<any>MappableTrait[kind(fa) as F]).map(f, fa) as HKT<F, B>;
   };
 }
+
+function SomeMethodNeedPickType(type: )

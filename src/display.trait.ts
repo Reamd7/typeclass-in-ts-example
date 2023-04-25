@@ -1,7 +1,7 @@
-import { HKT, $, kind } from "./typeclasses/index";
+import { HKTName, HKT, kind } from "./typeclasses/index";
 
-export interface Display<F extends HKT> {
-  print<A>(fa: $<F, A>): string;
+export interface Display<F extends HKTName> {
+  print<A>(fa: HKT<F, A>): string;
 }
 type DisplayInstances = keyof typeof Display;
 
@@ -10,7 +10,7 @@ export module Display {
 }
 
 export function display<F extends DisplayInstances, A = any>(
-  fa: $<F, A>
+  fa: HKT<F, A>
 ): string {
   return (<any>Display[kind(fa) as F]).print(fa);
 }
